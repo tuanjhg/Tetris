@@ -1,0 +1,62 @@
+# depslib dependency file v1.0
+1679222180 source:d:\tetris\main.cpp
+	"Game.h"
+
+1679111507 d:\tetris\include\engine.h
+	<SDL.h>
+	<iostream>
+	"Board.h"
+	"BlocksObject.h"
+
+1678879486 source:d:\tetris\src\engine.cpp
+	"Engine.h"
+
+1679110686 d:\tetris\include\board.h
+	"BlocksObject.h"
+	<vector>
+
+1679110570 d:\tetris\include\blocksobject.h
+	"SDL.h"
+	"Board.h"
+	<vector>
+
+1679110570 source:d:\tetris\src\board.cpp
+	"Board.h"
+
+1679110570 source:d:\tetris\src\blocksobject.cpp
+	"BlocksObject.h"
+	<random>
+
+1679225305 source:d:\tetris\src\render.cpp
+	"Render.h"
+
+1679225305 d:\tetris\include\render.h
+	<SDL.h>
+	<SDL_image.h>
+
+1679196311 source:d:\tetris\src\object.cpp
+	"Object.h"
+
+1679195339 d:\tetris\include\object.h
+	<SDL.h>
+	<vector>
+	<iostream>
+
+1679226067 d:\tetris\include\game.h
+	<SDL.h>
+	<iostream>
+	<cstdlib>
+	<ctime>
+	<string>
+	"Tetromino.h"
+	"Render.h"
+
+1679221618 d:\tetris\include\tetromino.h
+	<Render.h>
+
+1679226289 source:d:\tetris\src\tetromino.cpp
+	"Tetromino.h"
+
+1679225676 source:d:\tetris\src\game.cpp
+	"Game.h"
+
