@@ -27,12 +27,14 @@
 	"BlocksObject.h"
 	<random>
 
-1679225305 source:d:\tetris\src\render.cpp
+1681018932 source:d:\tetris\src\render.cpp
 	"Render.h"
 
-1679225305 d:\tetris\include\render.h
+1681015658 d:\tetris\include\render.h
 	<SDL.h>
 	<SDL_image.h>
+	<iostream>
+	<SDL_ttf.h>
 
 1679196311 source:d:\tetris\src\object.cpp
 	"Object.h"
@@ -42,7 +44,7 @@
 	<vector>
 	<iostream>
 
-1679226067 d:\tetris\include\game.h
+1681011247 d:\tetris\include\game.h
 	<SDL.h>
 	<iostream>
 	<cstdlib>
@@ -51,12 +53,12 @@
 	"Tetromino.h"
 	"Render.h"
 
-1679221618 d:\tetris\include\tetromino.h
+1680802361 d:\tetris\include\tetromino.h
 	<Render.h>
 
-1679226289 source:d:\tetris\src\tetromino.cpp
+1680802089 source:d:\tetris\src\tetromino.cpp
 	"Tetromino.h"
 
-1679225676 source:d:\tetris\src\game.cpp
+1681018896 source:d:\tetris\src\game.cpp
 	"Game.h"
 

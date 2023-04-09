@@ -1,10 +1,11 @@
 #include "Game.h"
 Game::Game() {
     for (int i = 0; i < BOARD_HEIGHT; i++) {
-    for (int j = 0; j < BOARD_WIDTH; j++) {
-        board[i][j] = -1;
+        for (int j = 0; j < BOARD_WIDTH; j++) {
+            board[i][j] = -1;
+        }
     }
-}
+    score=0;
     renderer=nullptr;
     window=nullptr;
     currentTetromino.setRandom();
@@ -13,17 +14,20 @@ Game::Game() {
 void Game::update() {
     if (!gameover) {
         currentTetromino.move(0, 1);
-    if (collides()) {
-        currentTetromino.move(0, -1);
-    for (int i = 0; i < BLOCKS_PER_PIECE; i++) {
-        int x = currentTetromino.x + tetrominoes[currentTetromino.pieceType][currentTetromino.rotation][i][0];
-        int y = currentTetromino.y + tetrominoes[currentTetromino.pieceType][currentTetromino.rotation][i][1];
-        board[y][x] = currentTetromino.pieceType;
-}
-    checkLines();
-    currentTetromino.setRandom();
-    if (collides()) {
-        gameover = true;
+        if (collides()) {
+            currentTetromino.move(0, -1);
+            for (int i = 0; i < BLOCKS_PER_PIECE; i++) {
+                int x = currentTetromino.x + tetrominoes[currentTetromino.pieceType][currentTetromino.rotation][i][0];
+                int y = currentTetromino.y + tetrominoes[currentTetromino.pieceType][currentTetromino.rotation][i][1];
+                board[y][x] = currentTetromino.pieceType;
+            }
+            checkLines();
+            std::cout<<score<<std::endl;
+            currentTetromino.setRandom();
+            currentTetromino.pieceType=nextPieceTetromino.pieceType;
+            nextPieceTetromino.setNewRandom();
+            if (collides()) {
+                gameover = true;
             }
         }
     }
@@ -48,24 +52,25 @@ void Game::checkLines() {
                 break;
         }
     }
-    if (lineFull) {
-        linesCleared++;
-        for (int k = i; k >= 1; k--) {
-        for (int j = 0; j < BOARD_WIDTH; j++) {
-            board[k][j] = board[k-1][j];
-        }
-    }
-    for (int j = 0; j < BOARD_WIDTH; j++) {
-        board[0][j] = -1;
+        if (lineFull) {
+            linesCleared++;
+            for (int k = i; k >= 1; k--) {
+                for (int j = 0; j < BOARD_WIDTH; j++) {
+                    board[k][j] = board[k-1][j];
+                }
             }
-    i++;
+            for (int j = 0; j < BOARD_WIDTH; j++) {
+                board[0][j] = -1;
+                }
+                i++;
+                score+=50;
         }
     }
 }
 void Game::draw(SDL_Renderer* renderer) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
-    Render*render=new Render();
+    printScore();
     render->loadbackground(renderer);
     for (int i = 0; i < BOARD_HEIGHT; i++) {
         for (int j = 0; j < BOARD_WIDTH; j++) {
@@ -75,6 +80,7 @@ void Game::draw(SDL_Renderer* renderer) {
         }
     }
     currentTetromino.draw(renderer);
+    nextPieceTetromino.drawnextPiece(renderer);
     SDL_RenderPresent(renderer);
 }
 void Game::gamerun(){
@@ -117,21 +123,31 @@ void Game::gamerun(){
         game.update();
         game.draw(renderer);
         }
-        SDL_Delay(1);
+        SDL_Delay(10);
     }
+    render->loadgameover(renderer);
+    SDL_RenderPresent(renderer);
+    SDL_Delay(1000);
 }
 void Game::quit(){
     SDL_DestroyRenderer(renderer);
     renderer=nullptr;
     SDL_DestroyWindow(window);
     window=nullptr;
+    TTF_CloseFont(render->font);
     SDL_Quit();
 }
 void Game::init(){
     SDL_Init(SDL_INIT_EVERYTHING);
     window = SDL_CreateWindow("Tetris", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);
+}
+void Game::printScore(){
+char buffer[10];
+    itoa(score,buffer,10);
+    std::string text = std::string(buffer);
+    render->loadScore(text, 350, 120,renderer);
 }

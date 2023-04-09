@@ -16,8 +16,8 @@ const int tetrominoes[PIECE_TYPES][ROTATIONS][BLOCKS_PER_PIECE][2] = {
     // J
     {
         {{0,1},{1,1},{2,1},{2,0}},
-        {{1,0},{1,1},{1,2},{2,2}},
         {{0,1},{1,1},{2,1},{0,2}},
+        {{1,0},{1,1},{1,2},{2,2}},
         {{1,0},{1,1},{1,2},{0,0}}
     },
     // L
@@ -43,9 +43,9 @@ const int tetrominoes[PIECE_TYPES][ROTATIONS][BLOCKS_PER_PIECE][2] = {
     },
     // T
     {
-        {{1,0},{0,1},{1,1},{2,1}},
-        {{1,0},{1,1},{2,1},{1,2}},
         {{0,1},{1,1},{2,1},{1,2}},
+        {{1,0},{1,1},{2,1},{1,2}},
+        {{1,0},{0,1},{1,1},{2,1}},
         {{1,0},{0,1},{1,1},{1,2}}
     },
     // Z
@@ -82,10 +82,13 @@ class Tetromino{
     int rotation;
     Tetromino();
     void draw(SDL_Renderer* renderer);
-    void move(int deltaX, int deltaY);
+    void move(int posX, int posY);
     void rotate() ;
     void setRandom();
+    void setNewRandom();
     void drawBlock(SDL_Renderer*renderer,int x,int y,int colorIndex);
+    void drawnextPiece(SDL_Renderer * renderer);
+    void drawnextBlock(SDL_Renderer * renderer,int x,int y ,int colorIndex);
 };
 
 #endif // TETROMINO_H
