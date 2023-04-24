@@ -2,7 +2,7 @@
 void Tetromino::setRandom(){
     pieceType = rand() % PIECE_TYPES;
     rotation = rand() % ROTATIONS;
-    x = 16/ 2 - 2;//BOARD_WITDH=16;
+    x = 16/ 2 - 2;
     y = 0;
 }
 void Tetromino::setNewRandom(){

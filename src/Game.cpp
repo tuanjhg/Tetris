@@ -5,9 +5,8 @@ Game::Game() {
             board[i][j] = -1;
         }
     }
+    speed=GAME_SPEED;
     score=0;
-    renderer=nullptr;
-    window=nullptr;
     currentTetromino.setRandom();
     gameover = false;
 }
@@ -22,7 +21,6 @@ void Game::update() {
                 board[y][x] = currentTetromino.pieceType;
             }
             checkLines();
-            std::cout<<score<<std::endl;
             currentTetromino.setRandom();
             currentTetromino.pieceType=nextPieceTetromino.pieceType;
             nextPieceTetromino.setNewRandom();
@@ -63,14 +61,13 @@ void Game::checkLines() {
                 board[0][j] = -1;
                 }
                 i++;
-                score+=50;
-        }
+                GameScore();
+                }
     }
 }
-void Game::draw(SDL_Renderer* renderer) {
+void Game::draw(SDL_Renderer* &renderer) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
-    printScore();
     render->loadbackground(renderer);
     for (int i = 0; i < BOARD_HEIGHT; i++) {
         for (int j = 0; j < BOARD_WIDTH; j++) {
@@ -79,46 +76,50 @@ void Game::draw(SDL_Renderer* renderer) {
             }
         }
     }
+    itoa(score,buffer,10);
+    std::string text = std::string(buffer);
+    render->loadScore(text,330,200,renderer);
     currentTetromino.draw(renderer);
     nextPieceTetromino.drawnextPiece(renderer);
     SDL_RenderPresent(renderer);
 }
-void Game::gamerun(){
+void Game::gameloop(SDL_Renderer*&renderer){
     Game game;
     Uint32 lastTime = SDL_GetTicks();
+
     while (!game.gameover) {
-        SDL_Event event;
-    while (SDL_PollEvent(&event)) {
-        if (event.type == SDL_QUIT) {
-            game.gameover = true;
-        } else if (event.type == SDL_KEYDOWN) {
-            if (event.key.keysym.sym == SDLK_LEFT) {
-                game.currentTetromino.move(-1, 0);
-            if (game.collides()) {
-                game.currentTetromino.move(1, 0);
+            SDL_Event event;
+        while (SDL_PollEvent(&event)!=0) {
+            if (event.type == SDL_QUIT) {
+                game.gameover = true;
+            } else if (event.type == SDL_KEYDOWN) {
+                if (event.key.keysym.sym == SDLK_LEFT) {
+                    game.currentTetromino.move(-1, 0);
+                if (game.collides()) {
+                    game.currentTetromino.move(1, 0);
+                }
+            } else if (event.key.keysym.sym == SDLK_RIGHT) {
+                    game.currentTetromino.move(1, 0);
+                if (game.collides()) {
+                    game.currentTetromino.move(-1, 0);
             }
-        } else if (event.key.keysym.sym == SDLK_RIGHT) {
-                game.currentTetromino.move(1, 0);
-            if (game.collides()) {
-                game.currentTetromino.move(-1, 0);
-        }
-        } else if (event.key.keysym.sym == SDLK_DOWN) {
-                game.currentTetromino.move(0, 1);
-            if (game.collides()) {
-                game.currentTetromino.move(0, -1);
-        }
-        } else if (event.key.keysym.sym == SDLK_UP) {
-                game.currentTetromino.rotate();
-            if (game.collides()) {
-                game.currentTetromino.rotate();
-                game.currentTetromino.rotate();
-                game.currentTetromino.rotate();
+            } else if (event.key.keysym.sym == SDLK_DOWN) {
+                    game.currentTetromino.move(0, 1);
+                if (game.collides()) {
+                    game.currentTetromino.move(0, -1);
+            }
+            } else if (event.key.keysym.sym == SDLK_UP) {
+                    game.currentTetromino.rotate();
+                if (game.collides()) {
+                    game.currentTetromino.rotate();
+                    game.currentTetromino.rotate();
+                    game.currentTetromino.rotate();
+                }
             }
         }
     }
-}
     Uint32 currentTime = SDL_GetTicks();
-    if (currentTime - lastTime >= GAME_SPEED){
+    if (currentTime - lastTime >= speed){
         lastTime = currentTime;
         game.update();
         game.draw(renderer);
@@ -127,27 +128,24 @@ void Game::gamerun(){
     }
     render->loadgameover(renderer);
     SDL_RenderPresent(renderer);
-    SDL_Delay(1000);
+    SDL_Delay(200);
 }
-void Game::quit(){
-    SDL_DestroyRenderer(renderer);
-    renderer=nullptr;
-    SDL_DestroyWindow(window);
-    window=nullptr;
-    TTF_CloseFont(render->font);
-    SDL_Quit();
+void Game::quit(bool &exitToMenu){
+    TTF_Quit();
+    Mix_Quit();
+    SDL_QUIT;
+    exitToMenu=true;
 }
-void Game::init(){
-    SDL_Init(SDL_INIT_EVERYTHING);
-    window = SDL_CreateWindow("Tetris", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-    SDL_RenderClear(renderer);
-    SDL_RenderPresent(renderer);
-}
-void Game::printScore(){
-char buffer[10];
-    itoa(score,buffer,10);
-    std::string text = std::string(buffer);
-    render->loadScore(text, 350, 120,renderer);
+void Game::GameScore(){
+ if(score<=1000){
+        speed=level[0];
+        score+=50;
+ }
+    else if (score>1000 && score<=5000){
+        speed=level[1];
+        score+=75;
+    }else{
+        speed=level[2];
+        score+=100;
+    }
 }
