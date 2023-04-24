@@ -33,12 +33,18 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="include/Button.h" />
 		<Unit filename="include/Game.h" />
+		<Unit filename="include/Menu.h" />
 		<Unit filename="include/Render.h" />
+		<Unit filename="include/Sound.h" />
 		<Unit filename="include/Tetromino.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/Button.cpp" />
 		<Unit filename="src/Game.cpp" />
+		<Unit filename="src/Menu.cpp" />
 		<Unit filename="src/Render.cpp" />
+		<Unit filename="src/Sound.cpp" />
 		<Unit filename="src/Tetromino.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
