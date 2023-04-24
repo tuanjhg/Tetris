@@ -53,3 +53,7 @@ right & left arrow keys: move a tetromino
 p key: pause game / restart game
 
 3. ### Image and Sound source
+
+ -Sound:https://www.deviantart.com/
+ 
+ -Music:https://freesound.org/
