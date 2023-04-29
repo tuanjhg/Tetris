@@ -1,6 +1,6 @@
 #ifndef TETROMINO_H
 #define TETROMINO_H
-#include<Render.h>
+#include"Render.h"
 const int PIECE_TYPES = 7;
 const int ROTATIONS = 4;
 const int BLOCK_SIZE = 20;

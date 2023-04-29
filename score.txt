@@ -1,0 +1,10 @@
+tuan: 6080
+khong tuan: 5970
+tuan: 5550
+abcdef: 4490
+tung: 50
+
+
+
+
+

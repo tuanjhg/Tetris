@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1681893635 source:d:\tetris\main.cpp
+1682614750 source:d:\tetris\main.cpp
 	"Game.h"
 	"Menu.h"
 
@@ -28,10 +28,10 @@
 	"BlocksObject.h"
 	<random>
 
-1681825969 source:d:\tetris\src\render.cpp
+1682615566 source:d:\tetris\src\render.cpp
 	"Render.h"
 
-1681901658 d:\tetris\include\render.h
+1682615560 d:\tetris\include\render.h
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_mixer.h>
@@ -46,43 +46,42 @@
 	<vector>
 	<iostream>
 
-1681891396 d:\tetris\include\game.h
-	<SDL.h>
-	<iostream>
+1682617249 d:\tetris\include\game.h
 	<cstdlib>
 	<ctime>
-	<string>
+	<vector>
 	"Tetromino.h"
 	"Render.h"
+	"Button.h"
+	"Sound.h"
 
-1681556775 d:\tetris\include\tetromino.h
-	<Render.h>
+1682437097 d:\tetris\include\tetromino.h
+	"Render.h"
 
-1681555562 source:d:\tetris\src\tetromino.cpp
+1682610821 source:d:\tetris\src\tetromino.cpp
 	"Tetromino.h"
 
-1681902052 source:d:\tetris\src\game.cpp
+1682617229 source:d:\tetris\src\game.cpp
 	"Game.h"
 
-1681887238 d:\tetris\include\sound.h
+1682355155 d:\tetris\include\sound.h
 	<SDL_mixer.h>
 
-1681897753 source:d:\tetris\src\sound.cpp
+1682353430 source:d:\tetris\src\sound.cpp
 	"sound.h"
 
-1681902887 source:d:\tetris\src\button.cpp
+1682616728 source:d:\tetris\src\button.cpp
 	"Button.h"
 
-1681808233 d:\tetris\include\button.h
+1682616722 d:\tetris\include\button.h
 	<string>
 	"Render.h"
 
-1682295947 source:d:\tetris\src\menu.cpp
+1682695246 source:d:\tetris\src\menu.cpp
 	"Menu.h"
 
-1681902811 d:\tetris\include\menu.h
+1682616722 d:\tetris\include\menu.h
 	<vector>
-	<string>
 	"Button.h"
 	"Sound.h"
 

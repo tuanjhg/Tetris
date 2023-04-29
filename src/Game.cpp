@@ -9,6 +9,9 @@ Game::Game() {
     score=0;
     currentTetromino.setRandom();
     gameover = false;
+    playername = "Unknown";
+    playerDecision = WAITING;
+    currentBut=1;
 }
 void Game::update() {
     if (!gameover) {
@@ -84,14 +87,16 @@ void Game::draw(SDL_Renderer* &renderer) {
     SDL_RenderPresent(renderer);
 }
 void Game::gameloop(SDL_Renderer*&renderer){
+    runningEGBoard=true;
     Game game;
     Uint32 lastTime = SDL_GetTicks();
-
     while (!game.gameover) {
             SDL_Event event;
         while (SDL_PollEvent(&event)!=0) {
             if (event.type == SDL_QUIT) {
                 game.gameover = true;
+                runningEGBoard=false;
+                exitToMenu=true;
             } else if (event.type == SDL_KEYDOWN) {
                 if (event.key.keysym.sym == SDLK_LEFT) {
                     game.currentTetromino.move(-1, 0);
@@ -126,15 +131,12 @@ void Game::gameloop(SDL_Renderer*&renderer){
         }
         SDL_Delay(10);
     }
-    render->loadgameover(renderer);
-    SDL_RenderPresent(renderer);
-    SDL_Delay(200);
-}
-void Game::quit(bool &exitToMenu){
+    SDL_Delay(100);
+    }
+void Game::quit(bool &exittoMenu){
     TTF_Quit();
     Mix_Quit();
-    SDL_QUIT;
-    exitToMenu=true;
+    exittoMenu=exitToMenu;
 }
 void Game::GameScore(){
  if(score<=1000){
@@ -148,4 +150,111 @@ void Game::GameScore(){
         speed=level[2];
         score+=100;
     }
+}
+int Game::getPlayerDecision() const{
+    return playerDecision;
+}
+void Game::reset(){
+    playerDecision = WAITING;
+    pos = -1;
+    yesBut->setStatus(Button::BUTTON_IN);
+    noBut->setStatus(Button::BUTTON_OUT);
+}
+SDL_Texture* Game::loadImage(SDL_Renderer* &renderer, const std::string imgPath) {
+    SDL_Surface* Image = IMG_Load(imgPath.c_str());
+    SDL_Texture* loadTexture = SDL_CreateTextureFromSurface(renderer, Image);
+    SDL_FreeSurface(Image);
+    return loadTexture;
+}
+void Game::GameEnd(bool &exitToMenu,SDL_Event &e,SDL_Renderer * &renderer,std::vector<std::string> &scoreData){
+    playerName->loadRenderText(renderer, playername.c_str(), {255, 255, 255, 255});
+    egBoard = loadImage(renderer, "endgame.png");
+    hsBoard = loadImage(renderer, "newHighscore.png");
+    yesBut->loadButton(renderer, "Yes"); yesBut->setStatus(Button::BUTTON_IN);
+    noBut ->loadButton(renderer, "No");  noBut ->setStatus(Button::BUTTON_OUT);
+    SDL_Rect dsRect = {50, 50, 450, 350};
+        for (int i = 0; i < scoreData.size(); ++i) {
+                int t = 0;
+                int j = 0;
+                while (j < scoreData[i].length() && scoreData[i][j] != ':') ++j;
+                j += 2;
+                while (j < scoreData[i].length()) t = t * 10 + scoreData[i][j] - '0', ++j;
+                if (score > t) {
+                    newRecord = true;
+                    SDL_StartTextInput();
+                    pos = i;
+                    break;
+                }
+            }
+    while (runningEGBoard) {
+        if (newRecord) {
+            SDL_RenderCopy(renderer, hsBoard, nullptr, &dsRect);
+            if (playername != "") {
+                playerName->loadRenderText(renderer, playername.c_str(), {0, 0, 0, 255});
+                playerName->renderText(renderer, 350, 258, Render::CENTER);
+            }
+        }
+        else{
+            SDL_RenderCopy(renderer, egBoard, nullptr, &dsRect);
+            yesBut->renderButton(renderer);
+            noBut ->renderButton(renderer);
+        }
+        SDL_Event e;
+        while (SDL_PollEvent(&e)!=0) {
+         if (newRecord) {
+                    if (e.type == SDL_KEYDOWN) {
+                        if (e.key.keysym.sym == SDLK_RETURN && playername.length() > 2) {
+                            SDL_StopTextInput();
+                            std::string data = playername + ": " + std::to_string(score);
+                            scoreData.emplace(scoreData.begin() + pos, data.c_str());
+                            scoreData.pop_back();
+                            newRecord = false;
+                            exitToMenu=true;
+                }
+                    if (e.key.keysym.sym == SDLK_BACKSPACE && playername.length() > 0) {
+                        playername.pop_back();
+                }
+                    else if (e.key.keysym.sym == SDLK_c && (SDL_GetModState() & KMOD_CTRL) ) {
+                        SDL_SetClipboardText(playername.c_str());
+                }
+                    else if (e.key.keysym.sym == SDLK_v && (SDL_GetModState() & KMOD_CTRL)) {
+                        playername = SDL_GetClipboardText();
+                }
+            }
+                else if (e.type == SDL_TEXTINPUT) {
+                    if( !( SDL_GetModState() & KMOD_CTRL && ( e.text.text[ 0 ] == 'c' || e.text.text[ 0 ] == 'C' || e.text.text[ 0 ] == 'v' || e.text.text[ 0 ] == 'V' ) ) && playername.length() < 22)
+                        if ((e.text.text[0] >= 'a' && e.text.text[0] <= 'z') || (e.text.text[0] >= 'A' && e.text.text[0] <= 'Z') || (e.text.text[0] >= '0' && e.text.text[0] <= '9') || e.text.text[0] == ' ')
+                            playername += e.text.text;
+                }
+        }
+        else {
+                    if (e.key.keysym.sym == SDLK_d || e.key.keysym.sym == SDLK_RIGHT) {
+                        currentBut = 2;
+                        noBut ->setStatus(Button::BUTTON_IN);
+                        yesBut->setStatus(Button::BUTTON_OUT);
+                    }
+                    else if (e.key.keysym.sym == SDLK_a || e.key.keysym.sym == SDLK_LEFT) {
+                        currentBut = 1;
+                        yesBut->setStatus(Button::BUTTON_IN);
+                        noBut ->setStatus(Button::BUTTON_OUT);
+                    }
+                    else if (e.key.keysym.sym == SDLK_RETURN) {
+                        if (currentBut == 1) {playerDecision = AGAIN;}
+                        if (currentBut ==2) {playerDecision = QUIT;}
+                    }
+                }
+        switch (getPlayerDecision()) {
+                    case Game::AGAIN:
+                       reset();
+                        runningEGBoard=false;
+                        break;
+                    case Game::QUIT:
+                        exitToMenu = true;
+                        runningEGBoard=false;
+                        break;
+                }
+        }
+        SDL_RenderPresent(renderer);
+    }
+
 }

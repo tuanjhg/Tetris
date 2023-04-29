@@ -6,17 +6,14 @@
 class Sound {
 public:
 	void init();
-
-	void playPoint();
-	void playBlock();
-	void playButton();
-	void playBackMusic();
+	void loadSound(int channel_index);
+	void playBackSound();
 private:
-    Mix_Chunk * SoundEffect[4];
+    Mix_Chunk * SoundEffect[3];
     const int fall_sound=0;
     const int Point_sound=1;
     const int Button_sound=2;
-    const int Back_sound=3;
+    Mix_Music* Back_sound;
 };
 
 #endif // !SOUND_H

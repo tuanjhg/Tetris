@@ -36,7 +36,7 @@ void Button::renderButton(SDL_Renderer* &renderer) {
 
         if (selectTextDetail != nullptr) {
             SDL_SetRenderDrawColor(renderer, normalColor.r, normalColor.g, normalColor.b, normalColor.a);
-            selectTextDetail->renderText(renderer, 441, 400, Render::LEFT);
+            selectTextDetail->renderText(renderer, 441, 500, Render::LEFT);
         }
     }
     else if (buttonStatus == BUTTON_OUT) {

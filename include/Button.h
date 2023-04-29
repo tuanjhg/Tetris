@@ -32,7 +32,6 @@ class Button {
 
         void changeSoundButton(SDL_Renderer* &renderer);
 
-        bool checkMousePos(const int &x, const int &y) const;
 
         std::string getText() const;
 };

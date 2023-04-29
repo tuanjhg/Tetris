@@ -4,11 +4,13 @@ Menu::Menu(const int baseScrPosX, const int baseScrPosY, const int totalButton, 
     howToPlayTexture = nullptr;
     highScoreTexture = nullptr;
     TOTAL_BUTTON = totalButton;
+    arrowHSPos=0;
     MENU_BUTTON_WIDTH  = buttonWidth;
     MENU_BUTTON_HEIGHT = buttonHeight;
     this->baseScrPosX  = baseScrPosX;
     this->baseScrPosY  = baseScrPosY;
     sound->init();
+    sound->playBackSound();
 }
 
 Menu::~Menu() {
@@ -31,14 +33,14 @@ SDL_Texture* Menu::loadImage(SDL_Renderer* &renderer, const std::string imgPath)
 }
 
 void Menu::init(SDL_Renderer* &renderer, const std::string imgPath, std::vector<std::string>& buttonText) {
-    SDL_Surface* Image = IMG_Load(imgPath.c_str());
+        SDL_Surface* Image = IMG_Load(imgPath.c_str());
         menuTexture = SDL_CreateTextureFromSurface(renderer, Image);
         SDL_FreeSurface(Image);
         howToPlayTexture = loadImage(renderer, "obj/Image/How to Play1.png");
         Image = IMG_Load("obj/Image/High Scores.png");
-        highScoreTexture = loadImage(renderer, "obj/Image/High Scores.png");
+        highScoreTexture = loadImage(renderer, "obj/Image/High Scores  (3).png");
 
-        scoreText = new Render(28);
+        scoreText = new Render(22);
 
         for (int i = 0; i < TOTAL_BUTTON; ++i)
             menuButton.push_back(new Button(MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, baseScrPosX - MENU_BUTTON_WIDTH / 2, baseScrPosY + (5 + MENU_BUTTON_HEIGHT) * (i - 1)));
@@ -62,6 +64,10 @@ void Menu::render(SDL_Renderer* &renderer,  std::vector<std::string> scoreData) 
     }
     else if (currentMenuStatus == HIGH_SCORES) {
         SDL_RenderCopy(renderer, highScoreTexture, nullptr, nullptr);
+        for (int i = arrowHSPos; i < arrowHSPos + 5; ++i) {
+            scoreText->loadRenderText(renderer, scoreData[i], {0, 0, 0, 255});
+            scoreText->renderText(renderer, 490, 160 + 40 * (i - arrowHSPos), Render::LEFT);
+        }
     }
     else {
         SDL_RenderCopy(renderer, menuTexture, nullptr, nullptr);
@@ -73,18 +79,18 @@ void Menu::render(SDL_Renderer* &renderer,  std::vector<std::string> scoreData) 
 void Menu::handleEvent(SDL_Event &e, SDL_Renderer* &renderer) {
     if (e.type == SDL_KEYDOWN) {
         if (e.key.keysym.sym == SDLK_DOWN || e.key.keysym.sym == SDLK_s) {
-                //sound->playButton();
+                sound->loadSound(2);
                 menuButton[currentButtonID]->setStatus(Button::BUTTON_OUT);
                 (currentButtonID += 1) %= TOTAL_BUTTON;
                 menuButton[currentButtonID]->setStatus(Button::BUTTON_IN);
         }
         else if (e.key.keysym.sym == SDLK_UP || e.key.keysym.sym == SDLK_w) {
-                //sound->playButton();
+                sound->loadSound(2);
                 menuButton[currentButtonID]->setStatus(Button::BUTTON_OUT);
                 (currentButtonID += TOTAL_BUTTON - 1) %= TOTAL_BUTTON;
                 menuButton[currentButtonID]->setStatus(Button::BUTTON_IN);
         }
-        else if (e.key.keysym.sym == SDLK_RETURN) {
+        else if (e.key.keysym.sym == SDLK_RETURN ) {
             if (currentMenuStatus == HOW_TO_PLAY) {
                 menuButton[currentButtonID]->setStatus(Button::BUTTON_IN);
                 currentMenuStatus = RUNNING;
@@ -100,12 +106,15 @@ void Menu::handleEvent(SDL_Event &e, SDL_Renderer* &renderer) {
                 else if (menuText == "Exit") currentMenuStatus = EXIT_BUTTON_PRESSED;
                 else if (menuText == "Sound: ON") {
                     menuButton[currentButtonID]->changeSoundButton(renderer);
+                    Mix_VolumeMusic( 0);
                     Mix_Volume(-1, 0);
                 }
                 else if (menuText == "Sound: OFF") {
                     menuButton[currentButtonID]->changeSoundButton(renderer),
+                    Mix_VolumeMusic( 100);
                     Mix_Volume(-1, MIX_MAX_VOLUME);
                 }
+
                 else if (menuText == "How to Play") {
                     currentMenuStatus = HOW_TO_PLAY;
                 }
