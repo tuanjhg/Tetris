@@ -5,8 +5,8 @@ const int PIECE_TYPES = 7;
 const int ROTATIONS = 4;
 const int BLOCK_SIZE = 20;
 const int BLOCKS_PER_PIECE = 4;
-const int tetrominoes[PIECE_TYPES][ROTATIONS][BLOCKS_PER_PIECE][2] = {
-    // I
+const int tetrominoes[PIECE_TYPES][BLOCKS_PER_PIECE][ROTATIONS][2] = {
+     // I
     {
         {{0,1},{1,1},{2,1},{3,1}},
         {{2,0},{2,1},{2,2},{2,3}},
@@ -88,5 +88,4 @@ class Tetromino{
         void drawnextPiece(SDL_Renderer * renderer);
         void drawnextBlock(SDL_Renderer * renderer,int x,int y ,int colorIndex);
 };
-
 #endif // TETROMINO_H

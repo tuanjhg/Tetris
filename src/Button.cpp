@@ -12,7 +12,8 @@ void Button::loadButton(SDL_Renderer* &renderer, std::string text) {
     normalText->loadRenderText(renderer, text, normalColor);
     selectText->loadRenderText(renderer, text, selectColor);
     bText = text;
-    if (text == "New Game") bDetail = " Press Enter to play a new game.";
+    if (text == "New Easy Game") bDetail = " Press Enter to play a new game.";
+    else if(text == "New Hard Game") bDetail = " Press Enter to play a new game.";
     else if (text == "How to Play") bDetail = "Press Enter for  how to play.";
     else if (text == "High Score") bDetail = "Press Enter for High score.";
     else if (text == "Sound: ON") bDetail = "Press Enter to change sound status.";

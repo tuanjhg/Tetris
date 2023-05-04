@@ -8,16 +8,15 @@ Game::Game() {
     speed=GAME_SPEED;
     score=0;
     currentTetromino.setRandom();
-     nextPieceTetromino.setNewRandom();
-    gameover = false;
+    nextPieceTetromino.setNewRandom();
     playername = "Unknown";
     playerDecision = WAITING;
     currentBut=1;
 }
-void Game::update() {
+void Game::update(const int &GameType) {
     if (!gameover) {
         currentTetromino.move(0, 1);
-        if (collides()) {
+        if (collides(GameType)) {
             currentTetromino.move(0, -1);
             for (int i = 0; i < BLOCKS_PER_PIECE; i++) {
                 int x = currentTetromino.x + tetrominoes[currentTetromino.pieceType][currentTetromino.rotation][i][0];
@@ -28,17 +27,20 @@ void Game::update() {
             currentTetromino.setRandom();
             currentTetromino.pieceType=nextPieceTetromino.pieceType;
             nextPieceTetromino.setNewRandom();
-            if (collides()) {
+            if (collides(GameType)) {
                 gameover = true;
             }
         }
     }
 }
-bool Game::collides() {
+bool Game::collides(const int &GameType) {
     for (int i = 0; i < BLOCKS_PER_PIECE; i++) {
         int x = currentTetromino.x + tetrominoes[currentTetromino.pieceType][currentTetromino.rotation][i][0];
         int y = currentTetromino.y + tetrominoes[currentTetromino.pieceType][currentTetromino.rotation][i][1];
-        if (x < 0 || x >= BOARD_WIDTH || y >= BOARD_HEIGHT || (y >= 0 && board[y][x] >= 0)) {
+        if (GameType==1&&(x < 0 || x >= BOARD_WIDTH || y >= BOARD_HEIGHT || (y >= 0 && board[y][x] >= 0))) {
+            return true;
+        }
+        if(GameType==2&&(x < 0 || x >= BOARD_WIDTH || y >= BOARD_HEIGHT/2 || (y >= 0 && board[y][x] >= 0))){
             return true;
         }
     }
@@ -69,10 +71,18 @@ void Game::checkLines() {
                 }
     }
 }
-void Game::draw(SDL_Renderer* &renderer) {
+void Game::draw(SDL_Renderer* &renderer,const int &GameType) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
-    render->loadbackground(renderer);
+    if(GameType==1){
+            render->loadbackground(renderer);}
+    else{
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_RenderDrawLine(renderer,0,280,560,280);
+        SDL_RenderDrawLine(renderer,280,0,280,280);
+        SDL_RenderDrawLine(renderer,280,140,560,140);
+        SDL_RenderDrawLine(renderer,0,20,280,20);
+    }
     for (int i = 0; i < BOARD_HEIGHT; i++) {
         for (int j = 0; j < BOARD_WIDTH; j++) {
             if (board[i][j] >= 0) {
@@ -87,7 +97,7 @@ void Game::draw(SDL_Renderer* &renderer) {
     nextPieceTetromino.drawnextPiece(renderer);
     SDL_RenderPresent(renderer);
 }
-void Game::gameloop(SDL_Renderer*&renderer){
+void Game::gameloop(SDL_Renderer*&renderer,const int &GameType){
     runningEGBoard=true;
     Game game;
     Uint32 lastTime = SDL_GetTicks();
@@ -101,22 +111,22 @@ void Game::gameloop(SDL_Renderer*&renderer){
             } else if (event.type == SDL_KEYDOWN) {
                 if (event.key.keysym.sym == SDLK_LEFT) {
                     game.currentTetromino.move(-1, 0);
-                if (game.collides()) {
+                if (game.collides(GameType)) {
                     game.currentTetromino.move(1, 0);
                 }
             } else if (event.key.keysym.sym == SDLK_RIGHT) {
                     game.currentTetromino.move(1, 0);
-                if (game.collides()) {
+                if (game.collides(GameType)) {
                     game.currentTetromino.move(-1, 0);
             }
             } else if (event.key.keysym.sym == SDLK_DOWN) {
                     game.currentTetromino.move(0, 1);
-                if (game.collides()) {
+                if (game.collides(GameType)) {
                     game.currentTetromino.move(0, -1);
             }
             } else if (event.key.keysym.sym == SDLK_UP) {
                     game.currentTetromino.rotate();
-                if (game.collides()) {
+                if (game.collides(GameType)) {
                     game.currentTetromino.rotate();
                     game.currentTetromino.rotate();
                     game.currentTetromino.rotate();
@@ -127,8 +137,8 @@ void Game::gameloop(SDL_Renderer*&renderer){
     Uint32 currentTime = SDL_GetTicks();
     if (currentTime - lastTime >= speed){
         lastTime = currentTime;
-        game.update();
-        game.draw(renderer);
+        game.update(GameType);
+        game.draw(renderer,GameType);
         }
         SDL_Delay(10);
     }
@@ -161,16 +171,10 @@ void Game::reset(){
     yesBut->setStatus(Button::BUTTON_IN);
     noBut->setStatus(Button::BUTTON_OUT);
 }
-SDL_Texture* Game::loadImage(SDL_Renderer* &renderer, const std::string imgPath) {
-    SDL_Surface* Image = IMG_Load(imgPath.c_str());
-    SDL_Texture* loadTexture = SDL_CreateTextureFromSurface(renderer, Image);
-    SDL_FreeSurface(Image);
-    return loadTexture;
-}
 void Game::GameEnd(bool &exitToMenu,SDL_Event &e,SDL_Renderer * &renderer,std::vector<std::string> &scoreData){
     playerName->loadRenderText(renderer, playername.c_str(), {255, 255, 255, 255});
-    egBoard = loadImage(renderer, "endgame.png");
-    hsBoard = loadImage(renderer, "newHighscore.png");
+    egBoard = render->loadImage(renderer, "endgame.png");
+    hsBoard = render->loadImage(renderer, "newHighscore.png");
     yesBut->loadButton(renderer, "Yes"); yesBut->setStatus(Button::BUTTON_IN);
     noBut ->loadButton(renderer, "No");  noBut ->setStatus(Button::BUTTON_OUT);
     SDL_Rect dsRect = {50, 50, 450, 350};
@@ -246,7 +250,7 @@ void Game::GameEnd(bool &exitToMenu,SDL_Event &e,SDL_Renderer * &renderer,std::v
                 }
         switch (getPlayerDecision()) {
                     case Game::AGAIN:
-                       reset();
+                        reset();
                         runningEGBoard=false;
                         break;
                     case Game::QUIT:

@@ -102,7 +102,8 @@ void Menu::handleEvent(SDL_Event &e, SDL_Renderer* &renderer) {
             else {
                 menuButton[currentButtonID]->setStatus(Button::BUTTON_IN);
                 std::string menuText = menuButton[currentButtonID]->getText();
-                if (menuText == "New Game") currentMenuStatus = PLAY_BUTTON_PRESSED;
+                if (menuText == "New Easy Game") currentMenuStatus = PLAY_BUTTON_PRESSED;
+                else if (menuText == "New Hard Game") currentMenuStatus = PLAY2_BUTTON_PRESSED;
                 else if (menuText == "Exit") currentMenuStatus = EXIT_BUTTON_PRESSED;
                 else if (menuText == "Sound: ON") {
                     menuButton[currentButtonID]->changeSoundButton(renderer);

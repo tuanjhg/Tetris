@@ -5,7 +5,7 @@
 
 #include <vector>
 #include "Button.h"
-#include"Sound.h"
+#include "Sound.h"
 class Menu {
     private:
         int arrowHSPos;
@@ -27,11 +27,11 @@ class Menu {
     public:
         int currentMenuStatus;
         std::vector<std::string>highScore;
-        enum Option {RUNNING=1,PLAY_BUTTON_PRESSED,EXIT_BUTTON_PRESSED,HOW_TO_PLAY,HIGH_SCORES};
+        enum Option {RUNNING=1,PLAY_BUTTON_PRESSED,PLAY2_BUTTON_PRESSED,EXIT_BUTTON_PRESSED,HOW_TO_PLAY,HIGH_SCORES};
         SDL_Texture* loadImage(SDL_Renderer* &renderer, const std::string imgPath);
         static const bool ON = true;
         static const bool OFF = false;
-        std::vector<std::string> startMenuButtonText = { "New Game", "How to Play","High Score", "Sound: ON", "Exit"};
+        std::vector<std::string> startMenuButtonText = { "New Easy Game","New Hard Game", "How to Play","High Score", "Sound: ON", "Exit"};
         Menu(const int baseScrPosX, const int baseScrPosY, const int totalButton, const int buttonWidth, const int buttonHeight);
 
         ~Menu();

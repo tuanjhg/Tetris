@@ -1,7 +1,7 @@
 #include"Game.h"
 #include"Menu.h"
 int main(int argc,char* argv[]){
-    Menu*startMenu = new Menu(262, 320, 5, 320, 30);
+    Menu*startMenu = new Menu(262, 320, 6, 320, 30);
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_Window*window = SDL_CreateWindow("Tetris", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
@@ -15,6 +15,7 @@ int main(int argc,char* argv[]){
             }
     bool runningMenu = true;
     bool startGame ;
+    bool startGame2;
     bool Running=true;
     while (Running) {
         SDL_Event e;
@@ -27,7 +28,12 @@ int main(int argc,char* argv[]){
                         case Menu::PLAY_BUTTON_PRESSED:
                             runningMenu = false;
                             startGame=true;
+                            startGame2=false;
                              break;
+                        case Menu::PLAY2_BUTTON_PRESSED:
+                            runningMenu = false;
+                            startGame=false;
+                            startGame2=true;
                         case Menu::EXIT_BUTTON_PRESSED:
                             Running = false;
                              break;
@@ -37,13 +43,20 @@ int main(int argc,char* argv[]){
         }
         if (!runningMenu) {
                 if(startGame){
-                game->gameloop(renderer);
-                game->GameEnd(game->exitToMenu,e,renderer,startMenu->highScore);
-                game->quit(runningMenu);
+                    game->gameloop(renderer,1);
+                    game->GameEnd(game->exitToMenu,e,renderer,startMenu->highScore);
+                    game->quit(runningMenu);
                 startMenu->currentMenuStatus=1;
-        }else          if (runningMenu){ startGame = false;
-          startMenu->currentMenuStatus=1;
-}
+                }else if (runningMenu){
+                    startGame = false;
+                    startMenu->currentMenuStatus=1;
+                }
+                if(startGame2){
+                    game->gameloop(renderer,2);
+                    game->GameEnd(game->exitToMenu,e,renderer,startMenu->highScore);
+                    game->quit(runningMenu);
+                }
+
         }
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);

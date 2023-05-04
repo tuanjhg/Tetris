@@ -15,15 +15,11 @@ void Render::loadbackground(SDL_Renderer* &renderer){
     texture=SDL_CreateTextureFromSurface(renderer,surface);
     SDL_RenderCopy(renderer,texture,nullptr,nullptr);
 }
-void Render::loadgameover(SDL_Renderer* &renderer){
-    surface=IMG_Load("obj/Image/gameover.png");
-    SDL_Rect drect;
-    drect.h=280;
-    drect.w=280;
-    drect.x=140;
-    drect.y=140;
-    texture=SDL_CreateTextureFromSurface(renderer,surface);
-    SDL_RenderCopy(renderer,texture,nullptr,&drect);
+SDL_Texture* Render::loadImage(SDL_Renderer* &renderer, const std::string imgPath) {
+    SDL_Surface* surface = IMG_Load(imgPath.c_str());
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer,surface);
+    SDL_FreeSurface(surface);
+    return texture;
 }
 Render::~Render(){
     if (font != nullptr) {
@@ -52,7 +48,6 @@ Render::~Render(){
 }
 
 void Render::loadScore(std::string text, int x,int y,SDL_Renderer* &renderer){
-
     font=TTF_OpenFont("superstar.ttf",30);
     SDL_Surface* surface1 = TTF_RenderText_Solid(font, text.c_str(),textColor);
     SDL_Texture* texture1 = SDL_CreateTextureFromSurface(renderer,surface1);

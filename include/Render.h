@@ -13,7 +13,6 @@ class Render
         Render(int fontsize);
         ~Render();
         void loadbackground(SDL_Renderer* &renderer);
-        void loadgameover(SDL_Renderer* &renderer);
         void loadScore(std::string text,int x,int y,SDL_Renderer* &renderer);
         const std::string FONT_NAME = "superstar.ttf";
         static const int CENTER = 0;
@@ -22,6 +21,8 @@ class Render
         void loadRenderText(SDL_Renderer* &renderer, std::string text, SDL_Color textColor);
 
         void renderText(SDL_Renderer* &renderer, int x, int y, const int type);
+
+        SDL_Texture* loadImage(SDL_Renderer* &renderer, const std::string imgPath);
     private:
         SDL_Rect dsrect;
 
