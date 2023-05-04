@@ -40,6 +40,7 @@ int main(int argc,char* argv[]){
                 game->gameloop(renderer);
                 game->GameEnd(game->exitToMenu,e,renderer,startMenu->highScore);
                 game->quit(runningMenu);
+                startMenu->currentMenuStatus=1;
         }else          if (runningMenu){ startGame = false;
           startMenu->currentMenuStatus=1;
 }
