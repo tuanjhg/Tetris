@@ -8,6 +8,7 @@ Game::Game() {
     speed=GAME_SPEED;
     score=0;
     currentTetromino.setRandom();
+     nextPieceTetromino.setNewRandom();
     gameover = false;
     playername = "Unknown";
     playerDecision = WAITING;
