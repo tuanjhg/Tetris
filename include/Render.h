@@ -12,7 +12,7 @@ class Render
     public:
         Render(int fontsize);
         ~Render();
-        void loadbackground(SDL_Renderer* &renderer);
+        void loadbackground(SDL_Renderer* &renderer,const int &GameType);
         void loadScore(std::string text,int x,int y,SDL_Renderer* &renderer);
         const std::string FONT_NAME = "superstar.ttf";
         static const int CENTER = 0;

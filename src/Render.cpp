@@ -10,8 +10,12 @@ Render::Render(int fontsize)
     surface=nullptr;
     texture=nullptr;
 }
-void Render::loadbackground(SDL_Renderer* &renderer){
-    surface=IMG_Load("obj/Image/background.png");
+void Render::loadbackground(SDL_Renderer* &renderer,const int &GameType){
+    if(GameType==1){
+    surface=IMG_Load("obj/Image/background.png");}
+    else{
+        surface=IMG_Load("obj/Image/background2.png");
+    }
     texture=SDL_CreateTextureFromSurface(renderer,surface);
     SDL_RenderCopy(renderer,texture,nullptr,nullptr);
 }

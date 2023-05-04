@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1683205664 source:d:\tetris\main.cpp
+1683207234 source:d:\tetris\main.cpp
 	"Game.h"
 	"Menu.h"
 
@@ -28,10 +28,10 @@
 	"BlocksObject.h"
 	<random>
 
-1683193019 source:d:\tetris\src\render.cpp
+1683208137 source:d:\tetris\src\render.cpp
 	"Render.h"
 
-1683193005 d:\tetris\include\render.h
+1683208137 d:\tetris\include\render.h
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_mixer.h>
@@ -61,7 +61,7 @@
 1683205527 source:d:\tetris\src\tetromino.cpp
 	"Tetromino.h"
 
-1683206927 source:d:\tetris\src\game.cpp
+1683208137 source:d:\tetris\src\game.cpp
 	"Game.h"
 
 1682355155 d:\tetris\include\sound.h

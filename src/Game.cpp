@@ -40,7 +40,7 @@ bool Game::collides(const int &GameType) {
         if (GameType==1&&(x < 0 || x >= BOARD_WIDTH || y >= BOARD_HEIGHT || (y >= 0 && board[y][x] >= 0))) {
             return true;
         }
-        if(GameType==2&&(x < 0 || x >= BOARD_WIDTH || y >= BOARD_HEIGHT/2 || (y >= 0 && board[y][x] >= 0))){
+        if(GameType==2&&(x < 0 || x >= BOARD_WIDTH || y >= BOARD_HEIGHT/2-1 || (y >= 0 && board[y][x] >= 0))){
             return true;
         }
     }
@@ -74,15 +74,7 @@ void Game::checkLines() {
 void Game::draw(SDL_Renderer* &renderer,const int &GameType) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
-    if(GameType==1){
-            render->loadbackground(renderer);}
-    else{
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        SDL_RenderDrawLine(renderer,0,280,560,280);
-        SDL_RenderDrawLine(renderer,280,0,280,280);
-        SDL_RenderDrawLine(renderer,280,140,560,140);
-        SDL_RenderDrawLine(renderer,0,20,280,20);
-    }
+    render->loadbackground(renderer,GameType);
     for (int i = 0; i < BOARD_HEIGHT; i++) {
         for (int j = 0; j < BOARD_WIDTH; j++) {
             if (board[i][j] >= 0) {
@@ -135,6 +127,7 @@ void Game::gameloop(SDL_Renderer*&renderer,const int &GameType){
         }
     }
     Uint32 currentTime = SDL_GetTicks();
+    if(GameType==2){speed=GAME_SPEED+30;}
     if (currentTime - lastTime >= speed){
         lastTime = currentTime;
         game.update(GameType);
@@ -173,8 +166,8 @@ void Game::reset(){
 }
 void Game::GameEnd(bool &exitToMenu,SDL_Event &e,SDL_Renderer * &renderer,std::vector<std::string> &scoreData){
     playerName->loadRenderText(renderer, playername.c_str(), {255, 255, 255, 255});
-    egBoard = render->loadImage(renderer, "endgame.png");
-    hsBoard = render->loadImage(renderer, "newHighscore.png");
+    egBoard = render->loadImage(renderer, "obj/Image/endgame.png");
+    hsBoard = render->loadImage(renderer, "obj/Image/newHighscore.png");
     yesBut->loadButton(renderer, "Yes"); yesBut->setStatus(Button::BUTTON_IN);
     noBut ->loadButton(renderer, "No");  noBut ->setStatus(Button::BUTTON_OUT);
     SDL_Rect dsRect = {50, 50, 450, 350};
